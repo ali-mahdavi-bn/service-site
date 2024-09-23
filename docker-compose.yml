@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  cosmicgo:
+    image: cosmicgo
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev
+    environment:
+      - DATABASE_HOST=postgres://dev:password@postgres:5432
+      - DATABASE_DRIVER=postgres
+    volumes:
+      - ./:/go/src/app
+
+volumes:
+  postgres-data:
